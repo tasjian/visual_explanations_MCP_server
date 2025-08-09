@@ -23,7 +23,12 @@ An **MCP (Model Control Protocol) server** that creates **animated visual explan
 # Clone or download the project
 cd vis_ex_MCP
 
-# Install Python dependencies
+# Method 1: Using the startup script (recommended)
+./start_server.sh
+
+# Method 2: Manual setup with virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Set API key (optional - will use mock responses without it)
@@ -199,14 +204,28 @@ vis_ex_MCP/
 ### Testing
 
 ```bash
-# Start development server with auto-reload
+# Start development server with auto-reload (in virtual environment)
+source venv/bin/activate
 python run_server.py
+
+# Or use the startup script
+./start_server.sh
 
 # Test API endpoint
 curl -X POST "http://localhost:8000/query" \
      -H "Content-Type: application/json" \
      -d '{"content": "Why does the Earth have seasons?"}'
 ```
+
+### Virtual Environment Notes
+
+The project now uses updated dependencies that avoid conflicts with other packages:
+
+- **FastAPI 0.116+** - Latest stable version
+- **Pydantic 2.9+** - Compatible with modern MCP tools
+- **Uvicorn 0.32+** - High-performance ASGI server
+
+If you encounter dependency conflicts, always use a virtual environment:
 
 ## 🤝 Contributing
 
