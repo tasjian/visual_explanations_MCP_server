@@ -113,7 +113,8 @@ async def query_mcp(req: Query):
     """Main MCP endpoint for processing queries"""
     
     # Generate LLM response with animation instructions
-    llm_response = await generate_llm_response(req.content, LLMProvider.OPENAI)
+    # Use Anthropic since we have the API key configured
+    llm_response = await generate_llm_response(req.content, LLMProvider.ANTHROPIC)
     
     response = MCPResponse(text_response=llm_response["text"])
     

@@ -42,14 +42,18 @@ class LLMIntegrator:
                 import openai
                 self.client = openai.OpenAI(api_key=self.api_key)
             except ImportError:
-                raise ImportError("OpenAI package not installed. Run: pip install openai")
+                print("⚠️  OpenAI package not installed. Using mock responses.")
+                self.provider = LLMProvider.LOCAL
+                return
         
         elif self.provider == LLMProvider.ANTHROPIC:
             try:
                 import anthropic
                 self.client = anthropic.Anthropic(api_key=self.api_key)
             except ImportError:
-                raise ImportError("Anthropic package not installed. Run: pip install anthropic")
+                print("⚠️  Anthropic package not installed. Using mock responses.")
+                self.provider = LLMProvider.LOCAL
+                return
     
     def _get_system_prompt(self) -> str:
         return '''You are an expert at creating educational animations for scientific concepts. 
