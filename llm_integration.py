@@ -10,6 +10,10 @@ from typing import Dict, Any, Optional, List
 import asyncio
 from dataclasses import dataclass
 from enum import Enum
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class LLMProvider(Enum):
     OPENAI = "openai"

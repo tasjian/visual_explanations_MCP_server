@@ -7,6 +7,10 @@ import asyncio
 import os
 from datetime import datetime
 import uvicorn
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from animation_templates import AnimationTemplates
 from llm_integration import generate_llm_response, LLMProvider

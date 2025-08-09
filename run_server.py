@@ -7,13 +7,18 @@ import os
 import sys
 import asyncio
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 def check_requirements():
     """Check if all required dependencies are installed"""
     required_packages = [
         'fastapi',
         'uvicorn',
-        'pydantic'
+        'pydantic',
+        'dotenv'
     ]
     
     missing_packages = []
