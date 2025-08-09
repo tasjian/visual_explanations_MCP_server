@@ -97,10 +97,9 @@ def main():
     # Import and run the server
     try:
         import uvicorn
-        from mcp_server import app
         
         uvicorn.run(
-            app,
+            "mcp_server:app",
             host="0.0.0.0",
             port=8000,
             reload=True,

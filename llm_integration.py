@@ -127,7 +127,7 @@ class LLMIntegrator:
         """Generate response using Anthropic API"""
         try:
             response = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=2000,
                 system=self._get_system_prompt(),
                 messages=[
