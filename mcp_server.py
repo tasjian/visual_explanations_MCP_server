@@ -89,7 +89,18 @@ class AnimationCompiler:
                 {"".join(f'<div class="annotation">{ann["text"]}</div>' for ann in instructions.annotations)}
             </div>
             <script>
-                {template}
+                // Ensure animation starts immediately
+                document.addEventListener('DOMContentLoaded', function() {{
+                    {template}
+                }});
+                
+                // Also try starting immediately in case DOM is already loaded
+                if (document.readyState === 'loading') {{
+                    // DOM still loading
+                }} else {{
+                    // DOM already loaded
+                    {template}
+                }}
             </script>
         </body>
         </html>
@@ -190,8 +201,17 @@ async def demo():
                     textResponse.textContent = data.text_response;
                     
                     if (data.html_animation) {
-                        animationContainer.innerHTML = 
-                            '<iframe srcdoc="' + data.html_animation.replace(/"/g, '&quot;') + '"></iframe>';
+                        // Create iframe with autoplay and proper loading
+                        const iframe = document.createElement('iframe');
+                        iframe.srcdoc = data.html_animation;
+                        iframe.style.width = '100%';
+                        iframe.style.height = '600px';
+                        iframe.style.border = '1px solid #ccc';
+                        iframe.onload = function() {
+                            console.log('Animation loaded and should autoplay');
+                        };
+                        animationContainer.innerHTML = '';
+                        animationContainer.appendChild(iframe);
                     } else {
                         animationContainer.innerHTML = '<p style="color: #666;">No animation available for this query.</p>';
                     }

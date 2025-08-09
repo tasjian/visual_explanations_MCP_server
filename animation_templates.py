@@ -96,9 +96,6 @@ class AnimationTemplates:
         camera.position.set(6, 3, 6);
         camera.lookAt(0, 0, 0);
         
-        // Start animation
-        animate();
-        
         // Add controls info
         const info = document.createElement('div');
         info.innerHTML = 'Earth rotates around Sun showing axial tilt causing seasons';
@@ -109,6 +106,14 @@ class AnimationTemplates:
         info.style.background = 'rgba(0,0,0,0.7)';
         info.style.padding = '10px';
         document.getElementById('animation-container').appendChild(info);
+        
+        // Auto-start animation when page loads
+        window.addEventListener('load', () => {{
+            animate();
+        }});
+        
+        // Also start immediately in case load event already fired
+        animate();
         '''
 
     @staticmethod
@@ -258,11 +263,6 @@ class AnimationTemplates:
             setTimeout(animateO2, 1500);
         }}
 
-        // Start animations
-        animateSunlight();
-        animateCO2();
-        animateO2();
-
         // Add equation
         svg.append("text")
             .attr("x", 50)
@@ -271,6 +271,18 @@ class AnimationTemplates:
             .attr("font-size", "16px")
             .attr("font-weight", "bold")
             .text("6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂");
+
+        // Auto-start animations when page loads
+        window.addEventListener('load', () => {{
+            animateSunlight();
+            animateCO2();
+            animateO2();
+        }});
+        
+        // Also start immediately in case load event already fired
+        animateSunlight();
+        animateCO2();
+        animateO2();
         '''
 
     @staticmethod
@@ -462,16 +474,22 @@ class AnimationTemplates:
             requestAnimationFrame(animate);
         }}
         
-        // Initialize
-        createElectrons();
-        animate();
-        
         // Add circuit description
         const description = document.createElement('div');
         description.innerHTML = 'Electric current flows from positive to negative terminal through the circuit';
         description.style.marginTop = '10px';
         description.style.fontFamily = 'Arial, sans-serif';
         document.getElementById('animation-container').appendChild(description);
+        
+        // Auto-start animation when page loads
+        window.addEventListener('load', () => {{
+            createElectrons();
+            animate();
+        }});
+        
+        // Also start immediately in case load event already fired
+        createElectrons();
+        animate();
         '''
 
     @staticmethod
@@ -557,5 +575,11 @@ class AnimationTemplates:
             requestAnimationFrame(animate);
         }}
         
+        // Auto-start animation when page loads
+        window.addEventListener('load', () => {{
+            animate();
+        }});
+        
+        // Also start immediately in case load event already fired
         animate();
         '''
