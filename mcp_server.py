@@ -137,6 +137,17 @@ async def query_mcp(req: Query):
     
     return response
 
+@app.get("/system-prompt")
+async def get_system_prompt():
+    """Display the system prompt used for generating animations"""
+    from llm_integration import LLMIntegrator, LLMProvider
+    integrator = LLMIntegrator(LLMProvider.ANTHROPIC)
+    return {
+        "system_prompt": integrator._get_system_prompt(),
+        "user_prompt_template": integrator._create_prompt("EXAMPLE_QUERY"),
+        "description": "This is the system prompt that guides Claude to generate structured animation instructions"
+    }
+
 @app.get("/demo", response_class=HTMLResponse)
 async def demo():
     """Demo page for testing the MCP server"""
@@ -159,6 +170,11 @@ async def demo():
     </head>
     <body>
         <h1>Visual Explanation MCP Server Demo</h1>
+        <div style="margin-bottom: 20px; text-align: center;">
+            <a href="/system-prompt" target="_blank" style="color: #007cba; text-decoration: none;">
+                🤖 View System Prompt Used for AI Generation
+            </a>
+        </div>
         <div class="container">
             <div class="input-panel">
                 <h3>Ask a Question</h3>
