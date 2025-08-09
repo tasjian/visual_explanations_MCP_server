@@ -25,7 +25,7 @@ class AnimationInstructions(BaseModel):
     actors: List[str]
     parameters: Dict[str, Any]
     timeline: List[Dict[str, Any]]
-    annotations: List[Dict[str, str]]
+    annotations: List[Dict[str, Any]]  # Changed from str to Any to allow mixed types
     
 class MCPResponse(BaseModel):
     text_response: str
@@ -164,21 +164,57 @@ async def demo():
 
         <script>
             async function sendQuery() {
+                const button = document.querySelector('button');
                 const query = document.getElementById('query').value;
-                const response = await fetch('/query', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: query })
-                });
+                const textResponse = document.getElementById('text-response');
+                const animationContainer = document.getElementById('animation-container');
                 
-                const data = await response.json();
-                document.getElementById('text-response').textContent = data.text_response;
+                // Show loading state
+                button.disabled = true;
+                button.textContent = 'Generating...';
+                textResponse.textContent = 'Thinking... 🤔';
+                animationContainer.innerHTML = '';
                 
-                if (data.html_animation) {
-                    document.getElementById('animation-container').innerHTML = 
-                        '<iframe srcdoc="' + data.html_animation.replace(/"/g, '&quot;') + '"></iframe>';
+                try {
+                    const response = await fetch('/query', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: query })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    textResponse.textContent = data.text_response;
+                    
+                    if (data.html_animation) {
+                        animationContainer.innerHTML = 
+                            '<iframe srcdoc="' + data.html_animation.replace(/"/g, '&quot;') + '"></iframe>';
+                    } else {
+                        animationContainer.innerHTML = '<p style="color: #666;">No animation available for this query.</p>';
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    textResponse.textContent = '❌ Error: ' + error.message;
+                    animationContainer.innerHTML = '<p style="color: #ff0000;">Failed to generate animation.</p>';
+                    
+                } finally {
+                    // Reset button state
+                    button.disabled = false;
+                    button.textContent = 'Generate Explanation';
                 }
             }
+            
+            // Allow Enter key to submit
+            document.getElementById('query').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendQuery();
+                }
+            });
         </script>
     </body>
     </html>
