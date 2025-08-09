@@ -59,35 +59,68 @@ class LLMIntegrator:
         return '''You are an expert at creating educational animations for scientific concepts. 
         Given a question, you must respond with both a clear text explanation and structured JSON instructions for creating an animated visualization.
 
-        Your response must be valid JSON in this exact format:
+        Your response must be valid JSON in this EXACT format:
         {
             "text": "Clear explanation of the concept...",
             "animation_instructions": {
-                "scene_type": "solar_system|photosynthesis|circuit|wave_interference|molecular|custom",
-                "actors": ["list", "of", "objects", "in", "scene"],
-                "parameters": {
-                    "key_parameter": value,
-                    "another_parameter": value
-                },
+                "scene": "solar_system|photosynthesis|circuit|wave_interference|molecular|custom",
+                "actors": [
+                    {
+                        "id": "unique_name",
+                        "type": "sphere|cube|cylinder|plane|particle_system|line",
+                        "radius": 1.0,
+                        "color": "#hexcolor",
+                        "position": [x, y, z],
+                        "rotation": [rx, ry, rz],
+                        "orbit_radius": 3.0,
+                        "tilt": 23.5,
+                        "emissive": "#hexcolor",
+                        "opacity": 1.0
+                    }
+                ],
                 "timeline": [
-                    {"time": 0, "action": "description", "parameters": {}},
-                    {"time": 1, "action": "description", "parameters": {}}
+                    {
+                        "time": 0.0,
+                        "properties": {
+                            "actor_property": value
+                        },
+                        "duration": 1.0,
+                        "easing": "linear|ease-in|ease-out|ease-in-out"
+                    }
                 ],
                 "annotations": [
-                    {"time": 0, "text": "Explanation of what happens at this moment"},
-                    {"time": 1, "text": "Next explanation"}
-                ]
+                    {
+                        "time": 0.0,
+                        "text": "Explanation of what happens at this moment",
+                        "duration": 3.0,
+                        "position": [x, y]
+                    }
+                ],
+                "camera": {
+                    "position": [x, y, z],
+                    "target": [x, y, z],
+                    "fov": 75
+                },
+                "duration": 10.0,
+                "loop": true
             }
         }
 
-        Scene types and their typical parameters:
-        - solar_system: earth_tilt, orbit_radius, animation_speed, show_seasons
-        - photosynthesis: plant_type, light_intensity, co2_flow, o2_production
-        - circuit: voltage, resistance, current_flow, component_types
-        - wave_interference: frequency1, frequency2, amplitude1, amplitude2, wave_type
-        - molecular: molecule_type, reaction_type, temperature, pressure
+        IMPORTANT RULES:
+        1. Every actor must have a unique "id" and valid "type"
+        2. Use realistic colors (hex format like "#ff0000" for red)
+        3. Timeline properties format: "actorId_property": value
+        4. Common properties: orbit_angle, rotation_angle, position, scale
+        5. Include 3-5 timeline events spread across the duration
+        6. Add 2-4 annotations explaining key moments
         
-        Always include realistic parameter values and detailed timeline with annotations.'''
+        Scene-specific guidelines:
+        - solar_system: Use sphere actors for planets/sun, include orbit mechanics
+        - photosynthesis: Use particle_system for molecules, custom for plants  
+        - circuit: Use cube/cylinder for components, particle_system for electron flow
+        - wave_interference: Use particle_system or custom visualization
+        
+        Always include realistic parameter values and smooth timeline progression.'''
 
     def _create_prompt(self, query: str) -> str:
         return f"""Question: {query}
